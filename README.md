@@ -69,3 +69,10 @@ PS: 目前只能在 Linux 和 MacOS 系统上实现， Windows
 
 + [Linux 系统](./docs/badvpn-linux.md)
 + MacOS 系统：暂时无法编译成功，如有人编译成功，望告知
+
+### 2. 通过 gotun2socks 实现智能分流
+
+`gotun2socks` 实际上是 `badvpn` 的 `go` 语言实现方式，而且更加智能化，它会在启动时自动帮你添加 tuntap 网卡，停止时自动删除该网卡，不需要我们手动添加删除。怎么样，是不是有点小激动呢？是不是从此爱上 go 语言了呢？:relieved:
+
++ [Linux 系统](./docs/gotun2socks-linux.md)
++ [MacOS 系统](./docs/gotun2socks-macos.md)
