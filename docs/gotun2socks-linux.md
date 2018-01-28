@@ -1,3 +1,5 @@
+# Linux 系统通过 gotun2socks 实现智能分流
+
 ## 安装 go 语言
 
 + Archlinux
@@ -34,6 +36,12 @@ $ vim /etc/profile
 ```bash
 export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$PATH
+```
+
+然后执行以下命令使环境变量生效
+
+```bash
+$ source /etc/profile
 ```
 
 ## 安装 gotun2socks
