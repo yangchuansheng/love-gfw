@@ -45,3 +45,8 @@ PS: 目前只能在 Linux 和 MacOS 系统上实现， Windows
 
 + [Linux 系统](./docs/iptables-linux.md)
 + MacOS 系统：暂无实现，与之类似的方案请参考 [一个基于 VirtualBox 和 openwrt 构建的项目, 旨在实现 macOS / Windows 平台的透明代理](https://github.com/icymind/VRouter)
+
+### 2. 通过 nftables 实现智能分流
+
++ [Linux 系统](./docs/nftables-linux.md)
++ MacOS 系统：暂无实现
