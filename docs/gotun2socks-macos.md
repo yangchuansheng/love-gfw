@@ -123,7 +123,7 @@ route add "$SOCKS_SERVER" "$GATEWAY_IP"
 # 国内网段走家用网关（路由器）的 IP 地址
 for i in $(cat $HOME/bin/routing-table/cn_rules.conf)
 do
-ip route add "$i" via "$GATEWAY_IP"
+route add "$i" "$GATEWAY_IP"
 done
 
 # 将默认网关设为虚拟网卡的IP地址
