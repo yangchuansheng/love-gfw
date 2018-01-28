@@ -134,3 +134,59 @@ $ chmod +x ss-up.sh
 $ chmod +x ss-down.sh
 ```
 
+## 配置ss-redir服务
+
+首先，默认的 `ss-local` 并不能用来作为 `iptables` 流量转发的目标，因为它是 `socks5` 代理而非透明代理。我们至少要把 systemd 执行的程序改成 `ss-redir`。其次，上述两个脚本还不能自动执行，必须让 systemd 分别在启动 `shadowsocks` 之前和关闭之后将脚本执行，这样才能自动配置好 iptables 规则。
+
+```bash
+$ cat /usr/lib/systemd/system/shadowsocks-libev@.service
+
+[Unit]
+Description=Shadowsocks-Libev Client Service
+After=network.target
+
+[Service]
+User=root
+CapabilityBoundingSet=~CAP_SYS_ADMIN
+ExecStart=
+ExecStartPre=/root/bin/shadowsocks/ss-up.sh
+ExecStart=/usr/bin/ss-redir -u -c /etc/%i.json
+ExecStopPost=/root/bin/shadowsocks/ss-down.sh
+
+[Install]
+WantedBy=multi-user.target
+```
+
+然后启动服务
+
+```bash
+$ systemctl start shadowsocks-libev@shadowsocks
+```
+
+设置成开机自启
+
+```bash
+$ systemctl enable shadowsocks-libev@shadowsocks
+```
+
+## 配置智能 DNS 服务
+
+完成了以上工作之后是不是就可以实现全局科学上网了呢？答案是否定的，我们还有最后一项工作需要完成，那就是解决 `DNS` 污染问题。如果你不知道什么是 `DNS` 污染，我可以简单地给你普及一下：
+
+> `DNS` 污染是一种让一般用户由于得到虚假目标主机 `IP` 而不能与其通信的方法，是一种 DNS 缓存投毒攻击（DNS cache poisoning）。其工作方式是：由于通常的 `DNS` 查询没有任何认证机制，而且 DNS 查询通常基于的 `UDP` 是无连接不可靠的协议，因此 DNS 的查询非常容易被篡改，通过对 `UDP` 端口 53 上的 DNS 查询进行入侵检测，一经发现与关键词相匹配的请求则立即伪装成目标域名的解析服务器（NS，Name Server）给查询者返回虚假结果。
+
+`DNS` 污染症状：目前一些被禁止访问的网站很多就是通过 `DNS` 污染来实现的，例如 `YouTube`、`Facebook` 等网站。
+
+**应对dns污染的方法**
+
++ 对于 DNS 污染，可以说，个人用户很难单单靠设置解决，通常可以使用 `VPN` 或者域名远程解析的方法解决，但这大多需要购买付费的 `VPN` 或 `SSH` 等。<br />
++ 修改 `Hosts` 的方法，手动设置域名正确的 IP 地址。<br />
++ dns 加密解析：[DNSCrypt](https://dnscrypt.org/)
++ 忽略 DNS 投毒污染小工具：[Pcap_DNSProxy](https://github.com/chengr28/Pcap_DNSProxy)
+
+我们选择用 `Pcap_DNSProxy` 来解决这个问题，以前用的是 `Pdnsd` + `Dnsmasq` 组合， 后来发现 TCP 请求效率太低加上家里网络与那些国外的 DNS 丢包实在是严重， 所以打算用 `Pcap_DNSProxy` 代替 `Pdnsd`。
+
+关于 Pcap_DNSProxy 的详细介绍，可以参考: [https://github.com/chengr28/Pcap_DNSProxy](https://github.com/chengr28/Pcap_DNSProxy)<br />
+安装过程可以参考： [https://github.com/chengr28/Pcap_DNSProxy/blob/master/Documents/ReadMe_Linux.zh-Hans.txt](https://github.com/chengr28/Pcap_DNSProxy/blob/master/Documents/ReadMe_Linux.zh-Hans.txt)<br /> 
+更详细的使用说明可以参考： [https://github.com/chengr28/Pcap_DNSProxy/blob/master/Documents/ReadMe.zh-Hans.txt](https://github.com/chengr28/Pcap_DNSProxy/blob/master/Documents/ReadMe.zh-Hans.txt)
+
