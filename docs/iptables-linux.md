@@ -190,3 +190,48 @@ $ systemctl enable shadowsocks-libev@shadowsocks
 安装过程可以参考： [https://github.com/chengr28/Pcap_DNSProxy/blob/master/Documents/ReadMe_Linux.zh-Hans.txt](https://github.com/chengr28/Pcap_DNSProxy/blob/master/Documents/ReadMe_Linux.zh-Hans.txt)<br /> 
 更详细的使用说明可以参考： [https://github.com/chengr28/Pcap_DNSProxy/blob/master/Documents/ReadMe.zh-Hans.txt](https://github.com/chengr28/Pcap_DNSProxy/blob/master/Documents/ReadMe.zh-Hans.txt)
 
+**这里主要重点强调一些需要注意的配置项：**
+
++ `DNS` - 境外域名解析参数区域（这是最关键的一项配置）
+
+```bash
+[DNS]
+# 这里一定要填 IPv4 + TCP！！！表示只使用 TCP 协议向境外远程 DNS 服务器发出请求
+Outgoing Protocol = IPv4 + TCP
+# 建议当系统使用全局代理功能时启用，程序将除境内服务器外的所有请求直接交给系统而不作任何过滤等处理，系统会将请求自动发往远程服务器进行解析
+Direct Request = IPv4
+...
+...
+```
+
++ `Local DNS` - 境内域名解析参数区域
+
+```bash
+[Local DNS]
+# 发送请求到境内 DNS 服务器时所使用的协议
+Local Protocol = IPv4 + UDP
+...
+...
+```
+
++ `Addresses` - 普通模式地址区域
+
+```bash
+[Addresses]
+...
+...
+# IPv4 主要境外 DNS 服务器地址
+IPv4 Main DNS Address = 8.8.4.4:53
+# IPv4 备用境外 DNS 服务器地址
+IPv4 Alternate DNS Address = 8.8.8.8:53|208.67.220.220:443|208.67.222.222:5353
+# IPv4 主要境内 DNS 服务器地址，用于境内域名解析，推荐使用 onedns
+IPv4 Local Main DNS Address = 112.124.47.27:53
+# IPv4 备用境内 DNS 服务器地址，用于境内域名解析
+IPv4 Local Alternate DNS Address = 114.215.126.16:53
+...
+...
+```
+
+配置好 DNS 服务之后将系统的 `DNS IP` 设置为 `127.0.0.1` 就可以了。
+
+如果局域网内的其他设备也想实现智能分流，请将网关和 DNS 均设置为这台电脑的 IP。
