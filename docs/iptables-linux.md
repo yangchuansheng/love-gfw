@@ -234,4 +234,26 @@ IPv4 Local Alternate DNS Address = 114.215.126.16:53
 
 配置好 DNS 服务之后将系统的 `DNS IP` 设置为 `127.0.0.1` 就可以了。
 
+## 打开流量转发
+
+```bash
+$ cat /etc/sysctl.d/30-ipforward.conf
+
+...
+...
+net.ipv4.ip_forward=1
+
+net.ipv6.conf.all.forwarding = 1
+
+net.ipv4.tcp_syn_retries = 5
+
+net.ipv4.tcp_synack_retries = 5
+```
+
+编辑完成后，执行以下命令使变动立即生效
+
+```bash
+$ sysctl -p
+```
+
 如果局域网内的其他设备也想实现智能分流，请将网关和 DNS 均设置为这台电脑的 IP。
