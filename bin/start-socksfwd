@@ -1,0 +1,18 @@
+#!/bin/bash
+
+ip route add "$SOCKS_SERVER" via "$GATEWAY_IP"
+
+# 特殊ip段走家用网关（路由器）的 IP 地址（如局域网联机）
+# ip route add "192.168.0.0/16" via "$GATEWAY_IP"
+# ip route add "10.8.0.0/16" via "$GATEWAY_IP"
+
+# 国内网段走家用网关（路由器）的 IP 地址
+for i in $(cat /root/bin/routing-table/cn_rules.conf)
+do
+ip route add "$i" via "$GATEWAY_IP"
+done
+
+# 将默认网关设为虚拟网卡的IP地址
+ip route del default
+ip route add 0.0.0.0/1 via "$TUN_NETWORK_PREFIX.1"
+ip route add 128.0.0.0/1 via "$TUN_NETWORK_PREFIX.1"

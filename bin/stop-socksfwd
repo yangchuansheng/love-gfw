@@ -1,0 +1,14 @@
+#!/bin/bash
+
+ip route del 128.0.0.0/1 via "$TUN_NETWORK_PREFIX.1"
+ip route del 0.0.0.0/1 via "$TUN_NETWORK_PREFIX.1"
+ip route add default via "$GATEWAY_IP"
+
+for i in $(cat /root/bin/routing-table/cn_rules.conf)
+do
+ip route del "$i" via "$GATEWAY_IP"
+done
+
+# ip route del "192.168.0.0/16" via "$GATEWAY_IP"
+# ip route del "10.8.0.0/16" via "$GATEWAY_IP"
+ip route del "$SOCKS_SERVER" via "$GATEWAY_IP"
