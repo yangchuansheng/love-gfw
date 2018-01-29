@@ -12,6 +12,9 @@ TUN_NETWORK_DEV=tun0
 # 选一个不冲突的内网 IP 段的前缀
 TUN_NETWORK_PREFIX=12.0.0
 
+# 启动 gotun2socks
+nohup /usr/local/bin/gotun2socks -tun-device "$TUN_NETWORK_DEV" -tun-address "$TUN_NETWORK_PREFIX.2" -tun-gw "$TUN_NETWORK_PREFIX.1" -local-socks-addr "127.0.0.1:$SOCKS_PORT" &>/dev/null &
+
 route add "$SOCKS_SERVER" "$GATEWAY_IP"
 
 # 特殊ip段走家用网关（路由器）的 IP 地址（如局域网联机）
@@ -26,5 +29,4 @@ done
 
 # 将默认网关设为虚拟网卡的IP地址
 route delete default
-$GOPATH/bin/gotun2socks -tun-device "$TUN_NETWORK_DEV" -tun-address "$TUN_NETWORK_PREFIX.2" -tun-gw "$TUN_NETWORK_PREFIX.1" -local-socks-addr "127.0.0.1:$SOCKS_PORT"
 route add default "$TUN_NETWORK_PREFIX.1"
