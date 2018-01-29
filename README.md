@@ -76,3 +76,9 @@ PS: 目前只能在 Linux 和 MacOS 系统上实现， Windows
 
 + [Linux 系统](./docs/gotun2socks-linux.md)
 + [MacOS 系统](./docs/gotun2socks-macos.md)
+
+## 版权
+
+Copyright 2018 Ryan (yangchuansheng33@gmail.com)
+
+MIT License，详情见 LICENSE 文件。
