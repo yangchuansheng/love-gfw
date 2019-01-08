@@ -246,6 +246,166 @@ IPv4 Local Alternate DNS Address = 114.215.126.16:53
 
 配置好 DNS 服务之后将系统的 `DNS IP` 设置为 `127.0.0.1` 就可以了。
 
+③ 除了使用 Pcap_DNSProxy 之外，你还可以选择 [DNS over HTTPS (DoH)](https://www.wikiwand.com/zh/DNS_over_HTTPS) ，该方案目前比较火爆。DoH 是一个进行安全化的域名解析的方案，目前尚处於实验性阶段。其意义在於以加密的 HTTPS 协议进行 DNS 解析请求，避免原始 DNS 协议中用户的 DNS 解析请求被窃听或者修改的问题（例如中间人攻击）来达到保护用户隐私的目的。InfoQ 上面有一篇文章详细分析了基于 HTTPS 的 DNS 原理：[图解基于 HTTPS 的 DNS](https://www.infoq.cn/article/a-cartoon-intro-to-dns-over-https)。
+
+目前实现该方案的软件有好几个，我这里重点推荐 Go 语言实现：[https_dns_proxy](https://github.com/aarond10/https_dns_proxy)。下面开始发挥脑洞“组装”基于 DoH 的智能 DNS：
+
+首先安装 https_dns_proxy，安装方式参考官方仓库的文档，我就不细说了。安装完成之后开始配置，这里重点介绍 MacOS 平台的配置。
+
+MacOS 可以使用 launchctl 来管理服务，它可以控制启动计算机时需要开启的服务，也可以设置定时执行特定任务的脚本，就像 Linux crontab 一样, 通过加装 `*.plist` 文件执行相应命令。Launchd 脚本存储在以下位置, 默认需要自己创建个人的 `LaunchAgents` 目录：
+
++ `~/Library/LaunchAgents` 由用户自己定义的任务项
++ `/Library/LaunchAgents` 由管理员为用户定义的任务项
++ `/Library/LaunchDaemons` 由管理员定义的守护进程任务项
++ `/System/Library/LaunchAgents` 由 MacOS 为用户定义的任务项
++ `/System/Library/LaunchDaemons` 由 MacOS 定义的守护进程任务项
+
+我们选择在 `/Library/LaunchAgents/` 目录下创建 `https_dns_proxy.plist` 文件，内容如下：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>https_dns_proxy</string>
+    <key>ProgramArguments</key>
+    <array>
+      <string>/usr/local/bin/https_dns_proxy</string>
+      <string>-u</string>
+      <string>nobody</string>
+      <string>-g</string>
+      <string>nogroup</string>
+      <string>-b</string>
+      <string>8.8.8.8,8.8.4.4</string>
+      <string>-r</string>
+      <string>https://dns.google.com/resolve?</string>
+      <string>-t</string>
+      <string>socks5://127.0.0.1:1080</string>
+    </array>
+    <key>StandardOutPath</key>
+    <string>/var/log/proximac.stdout.log</string>
+    <key>StandardErrorPath</key>
+    <string>/var/log/proximac.stderr.log</string>
+  </dict>
+</plist>
+```
+
+**注意：需要通过 socks5 代理来启动 https_dns_proxy！**
+
+设置开机自动启动 https_dns_proxy：
+
+```bash
+$ sudo launchctl load -w /Library/LaunchAgents/https_dns_proxy.plist
+```
+
+查看服务：
+
+```bash
+$ sudo launchctl list|grep https_dns_proxy
+
+-	0	https_dns_proxy
+```
+
+```bash
+$ sudo launchctl list https_dns_proxy
+
+{
+	"StandardOutPath" = "/var/log/proximac.stdout.log";
+	"LimitLoadToSessionType" = "System";
+	"StandardErrorPath" = "/var/log/proximac.stderr.log";
+	"Label" = "https_dns_proxy";
+	"TimeOut" = 30;
+	"OnDemand" = true;
+	"LastExitStatus" = 0;
+	"Program" = "/usr/local/bin/https_dns_proxy";
+	"ProgramArguments" = (
+		"/usr/local/bin/https_dns_proxy";
+		"-u";
+		"nobody";
+		"-g";
+		"nogroup";
+		"-b";
+		"8.8.8.8,8.8.4.4";
+		"-r";
+		"https://dns.google.com/resolve?";
+		"-t";
+		"socks5://127.0.0.1:1080";
+	);
+};
+```
+
+启动 https_dns_proxy 服务：
+
+```bash
+$ sudo launchctl start https_dns_proxy
+```
+
+```bash
+$ sudo launchctl list https_dns_proxy
+
+{
+	"StandardOutPath" = "/var/log/proximac.stdout.log";
+	"LimitLoadToSessionType" = "System";
+	"StandardErrorPath" = "/var/log/proximac.stderr.log";
+	"Label" = "https_dns_proxy";
+	"TimeOut" = 30;
+	"OnDemand" = true;
+	"LastExitStatus" = 0;
+	"PID" = 59194;
+	"Program" = "/usr/local/bin/https_dns_proxy";
+	"ProgramArguments" = (
+		"/usr/local/bin/https_dns_proxy";
+		"-u";
+		"nobody";
+		"-g";
+		"nogroup";
+		"-b";
+		"8.8.8.8,8.8.4.4";
+		"-r";
+		"https://dns.google.com/resolve?";
+		"-t";
+		"socks5://127.0.0.1:1080";
+	);
+};
+```
+
+DNS 解析的思路也和智能分流的思路一样，国内域名通过国内 DNS 解析，国外域名使用 https 协议通过国外 DNS 来解析。为了实现这个目的，就需要将 https_dns_proxy 和 dnsmasq 结合使用。dnsmasq 的安装很简单，可以直接使用 brew 安装：
+
+```bash
+$ sudo brew install dnsmasq
+```
+
+修改 dnsmasq 的配置文件 `/usr/local/etc/dnsmasq.conf`：
+
+```conf
+no-resolv
+no-poll
+server=127.0.0.1#5053
+user=nobody
+conf-dir=/usr/local/etc/dnsmasq.d
+```
+
+**注意：https_dns_proxy 的默认端口是 `5053`！**
+
+国内域名通过国内 DNS 解析，推荐使用 [onedns](https://www.onedns.net/)：
+
+```bash
+$ wget https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf -O /usr/local/etc/dnsmasq.d/accelerated-domains.china.conf
+$ sed -i "" "s#114.114.114.114#117.50.11.11#g" /usr/local/etc/dnsmasq.d/accelerated-domains.china.conf
+```
+
+如果你还需要更精细化的 DNS 解析配置，可以参考该项目：[dnsmasq-china-list](https://github.com/felixonmars/dnsmasq-china-list)。
+
+启动 dnsmasq 服务并设置开机自启动：
+
+```bash
+$ sudo brew services start dnsmasq
+```
+
+大功告成，现在你只需要将系统的 DNS IP 设置为 `127.0.0.1` 就可以了。
+
+
 ## 打开流量转发
 
 ```bash
