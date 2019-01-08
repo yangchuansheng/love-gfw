@@ -183,8 +183,20 @@ $ systemctl enable shadowsocks-libev@shadowsocks
 + 修改 `Hosts` 的方法，手动设置域名正确的 IP 地址。<br />
 + dns 加密解析：[DNSCrypt](https://dnscrypt.org/)
 + 忽略 DNS 投毒污染小工具：[Pcap_DNSProxy](https://github.com/chengr28/Pcap_DNSProxy)
++ 使用无污染 DNS
 
-我们选择用 `Pcap_DNSProxy` 来解决这个问题，以前用的是 `Pdnsd` + `Dnsmasq` 组合， 后来发现 TCP 请求效率太低加上家里网络与那些国外的 DNS 丢包实在是严重， 所以打算用 `Pcap_DNSProxy` 代替 `Pdnsd`。
+这里主要介绍两种方案，大家各取所需：
+
+① 使用无污染 DNS，目前我所知的国内无污染 DNS 只有中科大的 DNS 服务器，有两个服务器可以使用，分别是：
+
++ 电信网：`202.141.162.123`
++ 教育网：`202.38.93.153`
+
+你可以直接将系统的 DNS 设为上面给出的 DNS 地址。
+
+该方案简单方便，图省事的同学可以直接使用此方案，不需要任何折腾。**如果你知道更多的无污染 DNS，欢迎给我提 issue。**
+
+② 如果你更喜欢自己动手，可以选择用 `Pcap_DNSProxy` 来解决这个问题，我以前用的是 `Pdnsd` + `Dnsmasq` 组合， 后来发现 TCP 请求效率太低加上家里网络与那些国外的 DNS 丢包实在是严重， 所以选择用 `Pcap_DNSProxy` 代替 `Pdnsd`。
 
 关于 Pcap_DNSProxy 的详细介绍，可以参考: [https://github.com/chengr28/Pcap_DNSProxy](https://github.com/chengr28/Pcap_DNSProxy)<br />
 安装过程可以参考： [https://github.com/chengr28/Pcap_DNSProxy/blob/master/Documents/ReadMe_Linux.zh-Hans.txt](https://github.com/chengr28/Pcap_DNSProxy/blob/master/Documents/ReadMe_Linux.zh-Hans.txt)<br /> 
