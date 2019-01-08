@@ -179,12 +179,6 @@ $ sudo brew services start shadowsocks-libev
 
 当然这里不一定得用 `shadowsocks` 服务，只要是 `socks5` 协议都可以。
 
-+ 启动 pcap_dnsproxy 服务
-
-```bash
-$ sudo brew services start pcap_dnsproxy
-```
-
 + 添加路由表
 
 ```bash
