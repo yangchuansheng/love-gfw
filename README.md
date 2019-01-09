@@ -77,6 +77,114 @@ PS: 目前只能在 Linux 和 MacOS 系统上实现， Windows
 + [Linux 系统](./docs/gotun2socks-linux.md)
 + [MacOS 系统](./docs/gotun2socks-macos.md)
 
+## 番外篇
+
+虽然以上各种花式爱国方案都能实现全局智能分流，但对大多数人来说还是太复杂了，令人望而生畏。绝大多数人对于全局智能分流的需求不是很强烈，只需要让某些特殊的应用程序使用代理就行了。有的应用程序可以让你选择使用代理，但很多应用根本不提供这部分的配置。现在为了让一些原本逻辑没考虑/不使用/无法配置代理的软件流量经过代理走，只能通过 hook 的方式劫持系统调用。
+
+利用 [Proxifier](https://www.proxifier.com/) 就可以实现此功能，在 Proxifier 的帮助下，即使你不懂任何网络原理，通过简单配置也可以轻松地玩转流量转发。并且相比于 VPN（虚拟专用网）全局代理，Proxifier 这种灵活配置还可以实现一些意想不到的功能，例如：监测某个应用的流量或是屏蔽广告等。当然至于最终如何使用，完全取决于您的想像力。
+
+为了更好的使用 Proxifier，我们通过以下示意图来了解一下 Proxifier 工作的原理：
+
+1. Proxifier 启动后接管系统内所有的网络请求连接；
+2. 接管后的网络请求连接以 Proxifier 配置的规则处理；
+3. Direct (直连) 直接访问外部网络；Proxy (代理) 将请求交给代理服务器处理后再连接到外网；Block (禁止) 则会拦截掉向外发送的请求。
+
+![](https://ws3.sinaimg.cn/large/006tNc79gy1fz0edczefvj30dp06xdg8.jpg)
+
+需要说明的是，Proxifier 是收费的，也就几十块钱左右，大家最好还是支持正版。我这里也提供了一个 MacOS 破解版本：[Proxifier_2.22.1_xclient.info.dmg](https://www.lanzous.com/i2tv3je)。解压密码为：`xclient.info`，密钥在解压后的文本里。下面的使用教程针对的是 MacOS 用户，Windows 平台类似。
+
+### 使用教程
+
+接下来配置的三步顺序：
+
++ 代理服务器配置
++ 代理规则设置
++ 域名解析设置
+
+① 打开软件点击 Proxies：
+
+![](https://ws1.sinaimg.cn/large/006tNc79gy1fz0f3d99hwj316a0u04d2.jpg)
+
++ 点击 “Add”
++ 输入本地 shadowshocks 的 ip（默认127.0.0.1）和端口（默认1080）
++ 选择 `SOCKS Versin 5`
++ OK
+
+![](https://ws1.sinaimg.cn/large/006tNc79gy1fz0faoblsej30u00vdjvs.jpg)
+
+**接下来的两步配置至关重要，配置错误可能导致代理失败或者循环代理！**
+
+② 配置第二步
+
++ 点击 Rules
++ 选中 localhost,点击 Edit
++ Target hosts 处添加 shadowshocks 代理服务器的 IP 地址（以 123.123.123.123 示例）
++ Action选择Direct(直连)
++ OK
+
+![](https://ws1.sinaimg.cn/large/006tNc79gy1fz0feaqxvcj30t60tuadn.jpg)
+
+**注：此配置步骤允许发送到代理服务器的数据包通过，防止循环代理错误。**
+
+配置后如图：
+
+![](https://ws4.sinaimg.cn/large/006tNc79gy1fz0fhuwiqoj316u03a3zs.jpg)
+
+③ 配置第三步
+
++ 点击 DNS
++ 选择第二个 Resolve hostnames through proxy（通过代理服务器解析域名）
++ OK
+
+![](https://ws2.sinaimg.cn/large/006tNc79gy1fz0fnrzenij30vq0qggoz.jpg)
+
+**如果你已经配置了无污染 DNS，这里可以直接选择 Detect DNS settings automatically，使用系统默认的 DNS。**
+
+至此，代理已经配置完毕，接下来我给出一些具体使用场景的示例。平时工作中最常用的需要使用代理的工具就是 `git`，为了让 git 强制性使用代理，只需在 Proxifier 中创建一个代理规则：
+
++ 点击 Rules
++ 点击 Add
++ Name 字段填入 git
++ Applications 字段填入 `git-remote-https`
++ Action 选择 Proxy SOCKS5 127.0.0.1:1080
+
+![](https://ws4.sinaimg.cn/large/006tNc79gy1fz0g2zxu4oj30t60tu41s.jpg)
+
+如果你不知道 Applications 字段该写什么，我可以教你一个方法，在 git clone 的过程中通过下面的命令来寻找使用代理的进程：
+
+```bash
+$ sudo ps -ef|grep git
+
+  501  5623     1   0  2Dec18 ??         0:00.89 /Applications/Atom.app/Contents/Frameworks/Squirrel.framework/Resources/ShipIt com.github.atom.ShipIt /Users/yangcs/Library/Caches/com.github.atom.ShipIt/ShipItState.plist
+  501 77481 92668   0  5:14PM ttys002    0:00.00 grep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn git
+  501 77184 62902   0  5:14PM ttys003    0:00.07 git clone https://github.com/kubernetes/kubernetes
+  501 77185 77184   0  5:14PM ttys003    0:01.58 /usr/local/Cellar/git/2.18.0/libexec/git-core/git-remote-https origin https://github.com/kubernetes/kubernetes
+  501 77189 77185   0  5:14PM ttys003    0:00.39 /usr/local/Cellar/git/2.18.0/libexec/git-core/git fetch-pack --stateless-rpc --stdin --lock-pack --thin --check-self-contained-and-connected --cloning https://github.com/kubernetes/kubernetes/
+  501 77190 77189   0  5:14PM ttys003    0:01.52 /usr/local/Cellar/git/2.18.0/libexec/git-core/git index-pack --stdin -v --fix-thin --keep=fetch-pack 77189 on MacBookPro --check-self-contained-and-connected --pack_header=2,877904
+```
+
+很明显，`git-remote-https` 就是我们想找的进程，如果你还不放心，可以将 `git` 也加入 Applications 字段。
+
+![](https://ws1.sinaimg.cn/large/006tNc79gy1fz0gesufy3j30t60tugox.jpg)
+
+现在如果你通过 `git clone` 来拉取仓库，就可以看到详细的连接统计信息：
+
+![](https://ws2.sinaimg.cn/large/006tNc79gy1fz0gjpd5pqj318b0u0ai6.jpg)
+
+另外一个典型的使用场景就是 Docker。配置方法和 git 类似，我就不演示了，重点提醒一下 Applications 字段值是 `com.docker.vpnkit`。如果你不放心，可以使用通配符 `*docker*`。Target Hosts 字段填入 `gcr.io; *.docker.io`。
+
+![](https://ws1.sinaimg.cn/large/006tNc79gy1fz0gscf7gxj30t60tugoz.jpg)
+
+来，我们来 pull 一个传说中的无法使用代理拉取的 gcr.io 镜像，我就不信这个邪了：
+
+![](https://ws4.sinaimg.cn/large/006tNc79gy1fz0gwgkw6bj31s807odkr.jpg)
+
+![](https://ws2.sinaimg.cn/large/006tNc79gy1fz0gvtuns0j318b0u01a1.jpg)
+
+怎么样，还有谁？！
+
+其他还有一些迷之应用，比如 `brew`、`Slack` 都可以使用这个方法来强制使用代理，大家可以自己探索，再见！
+
 ## 版权
 
 Copyright 2018 Ryan (yangchuansheng33@gmail.com)
