@@ -187,7 +187,7 @@ $ systemctl enable shadowsocks-libev@shadowsocks
 
 这里主要介绍两种方案，大家各取所需：
 
-✴️① 使用无污染 DNS，目前我所知的国内无污染 DNS 只有中科大的 DNS 服务器，有两个服务器可以使用，分别是：
+✴️ ① 使用无污染 DNS，目前我所知的国内无污染 DNS 只有中科大的 DNS 服务器，有两个服务器可以使用，分别是：
 
 + 电信网：`202.141.162.123`
 + 教育网：`202.38.93.153`
@@ -196,7 +196,7 @@ $ systemctl enable shadowsocks-libev@shadowsocks
 
 该方案简单方便，图省事的同学可以直接使用此方案，不需要任何折腾。**如果你知道更多的无污染 DNS，欢迎给我提 issue。**
 
-✴️② 如果你更喜欢自己动手，可以选择用 `Pcap_DNSProxy` 来解决这个问题，我以前用的是 `Pdnsd` + `Dnsmasq` 组合， 后来发现 TCP 请求效率太低加上家里网络与那些国外的 DNS 丢包实在是严重， 所以选择用 `Pcap_DNSProxy` 代替 `Pdnsd`。
+✴️ ② 如果你更喜欢自己动手，可以选择用 `Pcap_DNSProxy` 来解决这个问题，我以前用的是 `Pdnsd` + `Dnsmasq` 组合， 后来发现 TCP 请求效率太低加上家里网络与那些国外的 DNS 丢包实在是严重， 所以选择用 `Pcap_DNSProxy` 代替 `Pdnsd`。
 
 关于 Pcap_DNSProxy 的详细介绍，可以参考: [https://github.com/chengr28/Pcap_DNSProxy](https://github.com/chengr28/Pcap_DNSProxy)<br />
 安装过程可以参考： [https://github.com/chengr28/Pcap_DNSProxy/blob/master/Documents/ReadMe_Linux.zh-Hans.txt](https://github.com/chengr28/Pcap_DNSProxy/blob/master/Documents/ReadMe_Linux.zh-Hans.txt)<br /> 
@@ -246,7 +246,7 @@ IPv4 Local Alternate DNS Address = 114.215.126.16:53
 
 配置好 DNS 服务之后将系统的 `DNS IP` 设置为 `127.0.0.1` 就可以了。
 
-✴️③ 除了使用 Pcap_DNSProxy 之外，你还可以选择 [DNS over HTTPS (DoH)](https://www.wikiwand.com/zh/DNS_over_HTTPS) ，该方案目前比较火爆。DoH 是一个进行安全化的域名解析的方案，目前尚处於实验性阶段。其意义在於以加密的 HTTPS 协议进行 DNS 解析请求，避免原始 DNS 协议中用户的 DNS 解析请求被窃听或者修改的问题（例如中间人攻击）来达到保护用户隐私的目的。InfoQ 上面有一篇文章详细分析了基于 HTTPS 的 DNS 原理：[图解基于 HTTPS 的 DNS](https://www.infoq.cn/article/a-cartoon-intro-to-dns-over-https)。
+✴️ ③ 除了使用 Pcap_DNSProxy 之外，你还可以选择 [DNS over HTTPS (DoH)](https://www.wikiwand.com/zh/DNS_over_HTTPS) ，该方案目前比较火爆。DoH 是一个进行安全化的域名解析的方案，目前尚处於实验性阶段。其意义在於以加密的 HTTPS 协议进行 DNS 解析请求，避免原始 DNS 协议中用户的 DNS 解析请求被窃听或者修改的问题（例如中间人攻击）来达到保护用户隐私的目的。InfoQ 上面有一篇文章详细分析了基于 HTTPS 的 DNS 原理：[图解基于 HTTPS 的 DNS](https://www.infoq.cn/article/a-cartoon-intro-to-dns-over-https)。
 
 目前实现该方案的软件有好几个，我这里重点推荐 Go 语言实现：[https_dns_proxy](https://github.com/aarond10/https_dns_proxy)。下面开始发挥脑洞“组装”基于 DoH 的智能 DNS：
 
