@@ -199,7 +199,7 @@ $ systemctl enable shadowsocks-libev@shadowsocks
 ✴️ ② 如果你更喜欢自己动手，可以选择用 `Pcap_DNSProxy` 来解决这个问题，我以前用的是 `Pdnsd` + `Dnsmasq` 组合， 后来发现 TCP 请求效率太低加上家里网络与那些国外的 DNS 丢包实在是严重， 所以选择用 `Pcap_DNSProxy` 代替 `Pdnsd`。
 
 关于 Pcap_DNSProxy 的详细介绍，可以参考: [https://github.com/chengr28/Pcap_DNSProxy](https://github.com/chengr28/Pcap_DNSProxy)<br />
-安装过程可以参考： [https://github.com/chengr28/Pcap_DNSProxy/blob/master/Documents/ReadMe_Linux.zh-Hans.txt](https://github.com/chengr28/Pcap_DNSProxy/blob/master/Documents/ReadMe_Linux.zh-Hans.txt)<br /> 
+安装过程可以参考： [https://github.com/chengr28/Pcap_DNSProxy/blob/master/Documents/ReadMe_Linux.zh-Hans.txt](https://github.com/chengr28/Pcap_DNSProxy/blob/master/Documents/ReadMe_Linux.zh-Hans.txt)<br />
 更详细的使用说明可以参考： [https://github.com/chengr28/Pcap_DNSProxy/blob/master/Documents/ReadMe.zh-Hans.txt](https://github.com/chengr28/Pcap_DNSProxy/blob/master/Documents/ReadMe.zh-Hans.txt)
 
 **这里主要重点强调一些需要注意的配置项：**
@@ -284,9 +284,9 @@ MacOS 可以使用 launchctl 来管理服务，它可以控制启动计算机时
       <string>socks5://127.0.0.1:1080</string>
     </array>
     <key>StandardOutPath</key>
-    <string>/var/log/proximac.stdout.log</string>
+    <string>/var/log/https_dns_proxy.stdout.log</string>
     <key>StandardErrorPath</key>
-    <string>/var/log/proximac.stderr.log</string>
+    <string>/var/log/https_dns_proxy.stderr.log</string>
   </dict>
 </plist>
 ```
@@ -311,9 +311,9 @@ $ sudo launchctl list|grep https_dns_proxy
 $ sudo launchctl list https_dns_proxy
 
 {
-	"StandardOutPath" = "/var/log/proximac.stdout.log";
+	"StandardOutPath" = "/var/log/https_dns_proxy.stdout.log";
 	"LimitLoadToSessionType" = "System";
-	"StandardErrorPath" = "/var/log/proximac.stderr.log";
+	"StandardErrorPath" = "/var/log/https_dns_proxy.stderr.log";
 	"Label" = "https_dns_proxy";
 	"TimeOut" = 30;
 	"OnDemand" = true;
@@ -345,9 +345,9 @@ $ sudo launchctl start https_dns_proxy
 $ sudo launchctl list https_dns_proxy
 
 {
-	"StandardOutPath" = "/var/log/proximac.stdout.log";
+	"StandardOutPath" = "/var/log/https_dns_proxy.stdout.log";
 	"LimitLoadToSessionType" = "System";
-	"StandardErrorPath" = "/var/log/proximac.stderr.log";
+	"StandardErrorPath" = "/var/log/https_dns_proxy.stderr.log";
 	"Label" = "https_dns_proxy";
 	"TimeOut" = 30;
 	"OnDemand" = true;
