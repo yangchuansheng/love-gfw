@@ -107,6 +107,8 @@ iptables -t nat -A OUTPUT -p tcp -j SHADOWSOCKS
 
 # 内网流量流经 shadowsocks 规则链，把 192.168/16 替换成你的实际的内网网段
 iptables -t nat -A PREROUTING -s 192.168/16 -j SHADOWSOCKS
+# 内网流量源NAT需要排除的网段，否则无法跨网段访问（例如，如果你将 192.168.1.10 的网关指定为这台运行 iptables 脚本的电脑的 IP，那么另一个网段的机器将无法访问 192.168.1.10），把 10.8.0.0/16 替换成你实际的网段
+iptables -t nat -A POSTROUTING -s 192.168.0.0/16 -d 10.8.0.0/16 -j RETURN
 # 内网流量源NAT
 iptables -t nat -A POSTROUTING -s 192.168/16 -j MASQUERADE
 ```
