@@ -103,7 +103,7 @@ PS: 目前只能在 Linux 和 MacOS 系统上实现， Windows
 
 ① 打开软件点击 Proxies：
 
-<div align=center><img width="400" src="https://ws1.sinaimg.cn/large/006tNc79gy1fz0f3d99hwj316a0u04d2.jpg"/></div>
+<div align=center><img width="700" src="https://ws1.sinaimg.cn/large/006tNc79gy1fz0f3d99hwj316a0u04d2.jpg"/></div>
 
 + 点击 “Add”
 + 输入本地 shadowshocks 的 ip（默认127.0.0.1）和端口（默认1080）
