@@ -89,8 +89,7 @@ PS: 目前只能在 Linux 和 MacOS 系统上实现， Windows
 2. 接管后的网络请求连接以 Proxifier 配置的规则处理；
 3. Direct (直连) 直接访问外部网络；Proxy (代理) 将请求交给代理服务器处理后再连接到外网；Block (禁止) 则会拦截掉向外发送的请求。
 
-![](https://ws3.sinaimg.cn/large/006tNc79gy1fz0edczefvj30dp06xdg8.jpg)
-<div align=center><img width="150" height="150" src="https://ws3.sinaimg.cn/large/006tNc79gy1fz0edczefvj30dp06xdg8.jpg"/></div>
+<div align=center><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fz0edczefvj30dp06xdg8.jpg"/></div>
 
 需要说明的是，Proxifier 是收费的，也就几十块钱左右，大家最好还是支持正版。我这里也提供了一个 MacOS 破解版本：[Proxifier_2.22.1_xclient.info.dmg](https://www.lanzous.com/i2tv3je)。解压密码为：`xclient.info`，密钥在解压后的文本里。下面的使用教程针对的是 MacOS 用户，Windows 平台类似。
 
