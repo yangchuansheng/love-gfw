@@ -110,7 +110,7 @@ PS: 目前只能在 Linux 和 MacOS 系统上实现， Windows
 + 选择 `SOCKS Versin 5`
 + OK
 
-![](https://ws1.sinaimg.cn/large/006tNc79gy1fz0faoblsej30u00vdjvs.jpg)
+<div align=center><img width="700" src="https://ws1.sinaimg.cn/large/006tNc79gy1fz0faoblsej30u00vdjvs.jpg"/></div>
 
 **接下来的两步配置至关重要，配置错误可能导致代理失败或者循环代理！**
 
@@ -122,13 +122,13 @@ PS: 目前只能在 Linux 和 MacOS 系统上实现， Windows
 + Action选择Direct(直连)
 + OK
 
-![](https://ws1.sinaimg.cn/large/006tNc79gy1fz0feaqxvcj30t60tuadn.jpg)
+<div align=center><img width="700" src="https://ws1.sinaimg.cn/large/006tNc79gy1fz0feaqxvcj30t60tuadn.jpg"/></div>
 
 **注：此配置步骤允许发送到代理服务器的数据包通过，防止循环代理错误。**
 
 配置后如图：
 
-![](https://ws4.sinaimg.cn/large/006tNc79gy1fz0fhuwiqoj316u03a3zs.jpg)
+<div align=center><img width="700" src="https://ws4.sinaimg.cn/large/006tNc79gy1fz0fhuwiqoj316u03a3zs.jpg"/></div>
 
 ③ 配置第三步
 
@@ -136,7 +136,7 @@ PS: 目前只能在 Linux 和 MacOS 系统上实现， Windows
 + 选择第二个 Resolve hostnames through proxy（通过代理服务器解析域名）
 + OK
 
-![](https://ws2.sinaimg.cn/large/006tNc79gy1fz0fnrzenij30vq0qggoz.jpg)
+<div align=center><img width="700" src="https://ws2.sinaimg.cn/large/006tNc79gy1fz0fnrzenij30vq0qggoz.jpg"/></div>
 
 **如果你已经配置了无污染 DNS，这里可以直接选择 Detect DNS settings automatically，使用系统默认的 DNS。**
 
@@ -148,7 +148,7 @@ PS: 目前只能在 Linux 和 MacOS 系统上实现， Windows
 + Applications 字段填入 `git-remote-https`
 + Action 选择 Proxy SOCKS5 127.0.0.1:1080
 
-![](https://ws4.sinaimg.cn/large/006tNc79gy1fz0g2zxu4oj30t60tu41s.jpg)
+<div align=center><img width="700" src="https://ws4.sinaimg.cn/large/006tNc79gy1fz0g2zxu4oj30t60tu41s.jpg"/></div>
 
 如果你不知道 Applications 字段该写什么，我可以教你一个方法，在 git clone 的过程中通过下面的命令来寻找使用代理的进程：
 
@@ -165,21 +165,21 @@ $ sudo ps -ef|grep git
 
 很明显，`git-remote-https` 就是我们想找的进程，如果你还不放心，可以将 `git` 也加入 Applications 字段。
 
-![](https://ws1.sinaimg.cn/large/006tNc79gy1fz0gesufy3j30t60tugox.jpg)
+<div align=center><img width="700" src="https://ws1.sinaimg.cn/large/006tNc79gy1fz0gesufy3j30t60tugox.jpg"/></div>
 
 现在如果你通过 `git clone` 来拉取仓库，就可以看到详细的连接统计信息：
 
-![](https://ws2.sinaimg.cn/large/006tNc79gy1fz0gjpd5pqj318b0u0ai6.jpg)
+<div align=center><img width="700" src="https://ws2.sinaimg.cn/large/006tNc79gy1fz0gjpd5pqj318b0u0ai6.jpg"/></div>
 
 另外一个典型的使用场景就是 Docker。配置方法和 git 类似，我就不演示了，重点提醒一下 Applications 字段值是 `com.docker.vpnkit`。如果你不放心，可以使用通配符 `*docker*`。Target Hosts 字段填入 `gcr.io; *.docker.io`。
 
-![](https://ws1.sinaimg.cn/large/006tNc79gy1fz0gscf7gxj30t60tugoz.jpg)
+<div align=center><img width="700" src="https://ws1.sinaimg.cn/large/006tNc79gy1fz0gscf7gxj30t60tugoz.jpg"/></div>
 
 来，我们来 pull 一个传说中的无法使用代理拉取的 gcr.io 镜像，我就不信这个邪了：
 
-![](https://ws4.sinaimg.cn/large/006tNc79gy1fz0gwgkw6bj31s807odkr.jpg)
+<div align=center><img width="700" src="https://ws4.sinaimg.cn/large/006tNc79gy1fz0gwgkw6bj31s807odkr.jpg"/></div>
 
-![](https://ws2.sinaimg.cn/large/006tNc79gy1fz0gvtuns0j318b0u01a1.jpg)
+<div align=center><img width="700" src="https://ws2.sinaimg.cn/large/006tNc79gy1fz0gvtuns0j318b0u01a1.jpg"/></div>
 
 怎么样，还有谁？！
 
