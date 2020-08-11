@@ -1,6 +1,8 @@
 # `Linux` 和 `MacOS` 设备智能分流方案
 
-![](./img/socialist.jpg) ![](./img/gfw.jpg)
+<center class="half">
+    <img src="https://cdn.jsdelivr.net/gh/yangchuansheng/love-gfw@master/img/socialist.jpg" width="200"/><img src="https://cdn.jsdelivr.net/gh/yangchuansheng/love-gfw@master/img/gfw.jpg" width="200"/>
+</center>
 
 通过路由器 360 度无痛爱国的方案已经层出不穷，然而我们不得不面对一个很现实的问题：**你不可能走到哪里都带着一个路由器！**
 
@@ -89,7 +91,7 @@ PS: 目前只能在 Linux 和 MacOS 系统上实现， Windows
 2. 接管后的网络请求连接以 Proxifier 配置的规则处理；
 3. Direct (直连) 直接访问外部网络；Proxy (代理) 将请求交给代理服务器处理后再连接到外网；Block (禁止) 则会拦截掉向外发送的请求。
 
-<div align=center><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fz0edczefvj30dp06xdg8.jpg"/></div>
+<div align=center><img src="https://ww3.sinaimg.cn/large/006tNc79gy1fz0edczefvj30dp06xdg8.jpg"/></div>
 
 需要说明的是，Proxifier 是收费的，也就几十块钱左右，大家最好还是支持正版。我这里也提供了一个 MacOS 破解版本：[Proxifier_2.22.1_xclient.info.dmg](https://www.lanzous.com/i2tv3je)。解压密码为：`xclient.info`，密钥在解压后的文本里。下面的使用教程针对的是 MacOS 用户，Windows 平台类似。
 
@@ -103,14 +105,14 @@ PS: 目前只能在 Linux 和 MacOS 系统上实现， Windows
 
 ① 打开软件点击 Proxies：
 
-<div align=center><img width="700" src="https://ws1.sinaimg.cn/large/006tNc79gy1fz0f3d99hwj316a0u04d2.jpg"/></div>
+<div align=center><img width="700" src="https://ww1.sinaimg.cn/large/006tNc79gy1fz0f3d99hwj316a0u04d2.jpg"/></div>
 
 + 点击 “Add”
 + 输入本地 shadowshocks 的 ip（默认127.0.0.1）和端口（默认1080）
 + 选择 `SOCKS Versin 5`
 + OK
 
-<div align=center><img width="700" src="https://ws1.sinaimg.cn/large/006tNc79gy1fz0faoblsej30u00vdjvs.jpg"/></div>
+<div align=center><img width="700" src="https://ww1.sinaimg.cn/large/006tNc79gy1fz0faoblsej30u00vdjvs.jpg"/></div>
 
 **接下来的两步配置至关重要，配置错误可能导致代理失败或者循环代理！**
 
@@ -122,13 +124,13 @@ PS: 目前只能在 Linux 和 MacOS 系统上实现， Windows
 + Action选择Direct(直连)
 + OK
 
-<div align=center><img width="700" src="https://ws1.sinaimg.cn/large/006tNc79gy1fz0feaqxvcj30t60tuadn.jpg"/></div>
+<div align=center><img width="700" src="https://ww1.sinaimg.cn/large/006tNc79gy1fz0feaqxvcj30t60tuadn.jpg"/></div>
 
 **注：此配置步骤允许发送到代理服务器的数据包通过，防止循环代理错误。**
 
 配置后如图：
 
-<div align=center><img width="700" src="https://ws4.sinaimg.cn/large/006tNc79gy1fz0fhuwiqoj316u03a3zs.jpg"/></div>
+<div align=center><img width="700" src="https://ww4.sinaimg.cn/large/006tNc79gy1fz0fhuwiqoj316u03a3zs.jpg"/></div>
 
 ③ 配置第三步
 
@@ -136,7 +138,7 @@ PS: 目前只能在 Linux 和 MacOS 系统上实现， Windows
 + 选择第二个 Resolve hostnames through proxy（通过代理服务器解析域名）
 + OK
 
-<div align=center><img width="700" src="https://ws2.sinaimg.cn/large/006tNc79gy1fz0fnrzenij30vq0qggoz.jpg"/></div>
+<div align=center><img width="700" src="https://ww2.sinaimg.cn/large/006tNc79gy1fz0fnrzenij30vq0qggoz.jpg"/></div>
 
 **如果你已经配置了无污染 DNS，这里可以直接选择 Detect DNS settings automatically，使用系统默认的 DNS。**
 
@@ -148,7 +150,7 @@ PS: 目前只能在 Linux 和 MacOS 系统上实现， Windows
 + Applications 字段填入 `git-remote-https`
 + Action 选择 Proxy SOCKS5 127.0.0.1:1080
 
-<div align=center><img width="700" src="https://ws4.sinaimg.cn/large/006tNc79gy1fz0g2zxu4oj30t60tu41s.jpg"/></div>
+<div align=center><img width="700" src="https://ww4.sinaimg.cn/large/006tNc79gy1fz0g2zxu4oj30t60tu41s.jpg"/></div>
 
 如果你不知道 Applications 字段该写什么，我可以教你一个方法，在 git clone 的过程中通过下面的命令来寻找使用代理的进程：
 
@@ -165,21 +167,21 @@ $ sudo ps -ef|grep git
 
 很明显，`git-remote-https` 就是我们想找的进程，如果你还不放心，可以将 `git` 也加入 Applications 字段。
 
-<div align=center><img width="700" src="https://ws1.sinaimg.cn/large/006tNc79gy1fz0gesufy3j30t60tugox.jpg"/></div>
+<div align=center><img width="700" src="https://ww1.sinaimg.cn/large/006tNc79gy1fz0gesufy3j30t60tugox.jpg"/></div>
 
 现在如果你通过 `git clone` 来拉取仓库，就可以看到详细的连接统计信息：
 
-<div align=center><img width="700" src="https://ws2.sinaimg.cn/large/006tNc79gy1fz0gjpd5pqj318b0u0ai6.jpg"/></div>
+<div align=center><img width="700" src="https://ww2.sinaimg.cn/large/006tNc79gy1fz0gjpd5pqj318b0u0ai6.jpg"/></div>
 
 另外一个典型的使用场景就是 Docker。配置方法和 git 类似，我就不演示了，重点提醒一下 Applications 字段值是 `com.docker.vpnkit`。如果你不放心，可以使用通配符 `*docker*`。Target Hosts 字段填入 `gcr.io; *.docker.io`。
 
-<div align=center><img width="700" src="https://ws1.sinaimg.cn/large/006tNc79gy1fz0gscf7gxj30t60tugoz.jpg"/></div>
+<div align=center><img width="700" src="https://ww1.sinaimg.cn/large/006tNc79gy1fz0gscf7gxj30t60tugoz.jpg"/></div>
 
 来，我们来 pull 一个传说中的无法使用代理拉取的 gcr.io 镜像，我就不信这个邪了：
 
-<div align=center><img width="700" src="https://ws4.sinaimg.cn/large/006tNc79gy1fz0gwgkw6bj31s807odkr.jpg"/></div>
+<div align=center><img width="700" src="https://ww4.sinaimg.cn/large/006tNc79gy1fz0gwgkw6bj31s807odkr.jpg"/></div>
 
-<div align=center><img width="700" src="https://ws2.sinaimg.cn/large/006tNc79gy1fz0gvtuns0j318b0u01a1.jpg"/></div>
+<div align=center><img width="700" src="https://ww2.sinaimg.cn/large/006tNc79gy1fz0gvtuns0j318b0u01a1.jpg"/></div>
 
 怎么样，还有谁？！
 
